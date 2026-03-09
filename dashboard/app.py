@@ -178,11 +178,11 @@ if page == "📊 Overview Dashboard":
     # ── Tenure × Monthly Charges scatter ──────────────────────────────────
     st.subheader("Tenure vs Monthly Charges by Segment")
     sample = df_seg.sample(min(2000, len(df_seg)), random_state=42)
-    fig3 = px.scatter(sample, x="tenure", y="MonthlyCharges",
+    fig3 = px.scatter(sample, x="Tenure in Months", y="Monthly Charge",
                       color="ClusterLabel", color_discrete_map=color_map,
                       opacity=0.55, size_max=6,
-                      labels={"tenure": "Tenure (months)",
-                               "MonthlyCharges": "Monthly Charges ($)",
+                      labels={"Tenure in Months": "Tenure (months)",
+                               "Monthly Charge": "Monthly Charges ($)",
                                "ClusterLabel": "Segment"})
     fig3.update_layout(height=420, margin=dict(t=10, b=10))
     st.plotly_chart(fig3, use_container_width=True)
@@ -227,8 +227,8 @@ elif page == "🔍 Customer Analyzer":
         # Build minimal feature vector aligned to training features
         row = {feat: 0.0 for feat in feature_names}
         overrides = {
-            "tenure": tenure, "MonthlyCharges": monthly_charges,
-            "TotalCharges": total_charges, "SeniorCitizen": senior_citizen,
+            "Tenure in Months": tenure, "Monthly Charge": monthly_charges,
+            "Total Charges": total_charges, "SeniorCitizen": senior_citizen,
             "gender": gender, "Partner": partner,
             "Dependents": dependents, "PhoneService": phone_service,
             "PaperlessBilling": paperless,
@@ -355,9 +355,9 @@ elif page == "🗺️ Segment Explorer":
         profile = df_seg.groupby("ClusterLabel").agg(
             Count      =("Churn", "count"),
             ChurnRate  =("Churn", lambda s: f"{(s=='Yes').mean()*100:.1f}%"),
-            AvgTenure  =("tenure", lambda s: f"{s.mean():.0f} months"),
-            AvgMonthly =("MonthlyCharges", lambda s: f"${s.mean():.2f}"),
-            AvgTotal   =("TotalCharges",   lambda s: f"${s.mean():,.0f}"),
+            AvgTenure  =("Tenure in Months", lambda s: f"{s.mean():.0f} months"),
+            AvgMonthly =("Monthly Charge", lambda s: f"${s.mean():.2f}"),
+            AvgTotal   =("Total Charges",   lambda s: f"${s.mean():,.0f}"),
         ).reset_index()
         st.dataframe(profile, use_container_width=True, hide_index=True)
 
@@ -366,13 +366,13 @@ elif page == "🗺️ Segment Explorer":
 
         col_a, col_b = st.columns(2)
         with col_a:
-            fig = px.histogram(seg_df, x="tenure", color="Churn",
+            fig = px.histogram(seg_df, x="Tenure in Months", color="Churn",
                                color_discrete_map={"No": "#2ecc71", "Yes": "#e74c3c"},
                                title=f"{selected} — Tenure Distribution",
                                barmode="overlay", opacity=0.75)
             st.plotly_chart(fig, use_container_width=True)
         with col_b:
-            fig2 = px.histogram(seg_df, x="MonthlyCharges", color="Churn",
+            fig2 = px.histogram(seg_df, x="Monthly Charge", color="Churn",
                                 color_discrete_map={"No": "#2ecc71", "Yes": "#e74c3c"},
                                 title=f"{selected} — Monthly Charges Distribution",
                                 barmode="overlay", opacity=0.75)

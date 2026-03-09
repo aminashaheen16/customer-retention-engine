@@ -126,7 +126,7 @@ class ClusteringService:
         df_profile["Cluster"]      = labels
         df_profile["ClusterLabel"] = df_profile["Cluster"].map(CLUSTER_LABELS)
 
-        numeric_cols = ["tenure", "MonthlyCharges", "TotalCharges"]
+        numeric_cols = [c for c in ["Tenure in Months", "Monthly Charge", "Total Charges"] if c in df_profile.columns]
         agg = df_profile.groupby("ClusterLabel")[numeric_cols].mean().round(2)
         cnt = df_profile.groupby("ClusterLabel").size().rename("CustomerCount")
         churn_rate = df_profile.groupby("ClusterLabel")["Churn"].apply(
