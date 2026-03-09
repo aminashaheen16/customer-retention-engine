@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+models/*.pkl
+logs/
+data/raw_telco.csv
+data/customers_segmented.csv
